@@ -1,0 +1,23 @@
+{
+  "name": "fleek-automater",
+  "version": "1.0.0",
+  "description": "Automate your Fleek deployments with Fleek Automater",
+  "main": "./src/index.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js && echo 'export const main = __webpack_exports__.main;' >> dist/fleekAutomaterProxy.bundle.js",
+    "deployToFleek": "npm run build && fleek functions deploy --name fleek-automater --path ./dist/fleekAutomaterProxy.bundle.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "0.23.0",
+    "webpack": "^5.90.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@fleekxyz/cli": "^2.1.0-dev.1",
+    "axios": "^1.7.2",
+    "ethers": "^5.0.0",
+    "fetch": "^1.1.0"
+  }
+}

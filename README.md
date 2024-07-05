@@ -1,1 +1,1 @@
-# fleek-automater
+# Fleek Automater
