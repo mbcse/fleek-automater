@@ -18967,6 +18967,128 @@ __webpack_require__.r(__webpack_exports__);
 const version = "hash/5.7.0";
 //# sourceMappingURL=_version.js.map
 
+/***/ }),
+/* 119 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   keccak256: () => (/* binding */ keccak256),
+/* harmony export */   pack: () => (/* binding */ pack),
+/* harmony export */   sha256: () => (/* binding */ sha256)
+/* harmony export */ });
+/* harmony import */ var _ethersproject_bignumber__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(61);
+/* harmony import */ var _ethersproject_bytes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(52);
+/* harmony import */ var _ethersproject_keccak256__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(56);
+/* harmony import */ var _ethersproject_sha2__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(96);
+/* harmony import */ var _ethersproject_strings__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(94);
+/* harmony import */ var _ethersproject_logger__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(53);
+/* harmony import */ var _version__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(120);
+
+
+
+
+
+
+const regexBytes = new RegExp("^bytes([0-9]+)$");
+const regexNumber = new RegExp("^(u?int)([0-9]*)$");
+const regexArray = new RegExp("^(.*)\\[([0-9]*)\\]$");
+const Zeros = "0000000000000000000000000000000000000000000000000000000000000000";
+
+
+const logger = new _ethersproject_logger__WEBPACK_IMPORTED_MODULE_0__.Logger(_version__WEBPACK_IMPORTED_MODULE_1__.version);
+function _pack(type, value, isArray) {
+    switch (type) {
+        case "address":
+            if (isArray) {
+                return (0,_ethersproject_bytes__WEBPACK_IMPORTED_MODULE_2__.zeroPad)(value, 32);
+            }
+            return (0,_ethersproject_bytes__WEBPACK_IMPORTED_MODULE_2__.arrayify)(value);
+        case "string":
+            return (0,_ethersproject_strings__WEBPACK_IMPORTED_MODULE_3__.toUtf8Bytes)(value);
+        case "bytes":
+            return (0,_ethersproject_bytes__WEBPACK_IMPORTED_MODULE_2__.arrayify)(value);
+        case "bool":
+            value = (value ? "0x01" : "0x00");
+            if (isArray) {
+                return (0,_ethersproject_bytes__WEBPACK_IMPORTED_MODULE_2__.zeroPad)(value, 32);
+            }
+            return (0,_ethersproject_bytes__WEBPACK_IMPORTED_MODULE_2__.arrayify)(value);
+    }
+    let match = type.match(regexNumber);
+    if (match) {
+        //let signed = (match[1] === "int")
+        let size = parseInt(match[2] || "256");
+        if ((match[2] && String(size) !== match[2]) || (size % 8 !== 0) || size === 0 || size > 256) {
+            logger.throwArgumentError("invalid number type", "type", type);
+        }
+        if (isArray) {
+            size = 256;
+        }
+        value = _ethersproject_bignumber__WEBPACK_IMPORTED_MODULE_4__.BigNumber.from(value).toTwos(size);
+        return (0,_ethersproject_bytes__WEBPACK_IMPORTED_MODULE_2__.zeroPad)(value, size / 8);
+    }
+    match = type.match(regexBytes);
+    if (match) {
+        const size = parseInt(match[1]);
+        if (String(size) !== match[1] || size === 0 || size > 32) {
+            logger.throwArgumentError("invalid bytes type", "type", type);
+        }
+        if ((0,_ethersproject_bytes__WEBPACK_IMPORTED_MODULE_2__.arrayify)(value).byteLength !== size) {
+            logger.throwArgumentError(`invalid value for ${type}`, "value", value);
+        }
+        if (isArray) {
+            return (0,_ethersproject_bytes__WEBPACK_IMPORTED_MODULE_2__.arrayify)((value + Zeros).substring(0, 66));
+        }
+        return value;
+    }
+    match = type.match(regexArray);
+    if (match && Array.isArray(value)) {
+        const baseType = match[1];
+        const count = parseInt(match[2] || String(value.length));
+        if (count != value.length) {
+            logger.throwArgumentError(`invalid array length for ${type}`, "value", value);
+        }
+        const result = [];
+        value.forEach(function (value) {
+            result.push(_pack(baseType, value, true));
+        });
+        return (0,_ethersproject_bytes__WEBPACK_IMPORTED_MODULE_2__.concat)(result);
+    }
+    return logger.throwArgumentError("invalid type", "type", type);
+}
+// @TODO: Array Enum
+function pack(types, values) {
+    if (types.length != values.length) {
+        logger.throwArgumentError("wrong number of values; expected ${ types.length }", "values", values);
+    }
+    const tight = [];
+    types.forEach(function (type, index) {
+        tight.push(_pack(type, values[index]));
+    });
+    return (0,_ethersproject_bytes__WEBPACK_IMPORTED_MODULE_2__.hexlify)((0,_ethersproject_bytes__WEBPACK_IMPORTED_MODULE_2__.concat)(tight));
+}
+function keccak256(types, values) {
+    return (0,_ethersproject_keccak256__WEBPACK_IMPORTED_MODULE_5__.keccak256)(pack(types, values));
+}
+function sha256(types, values) {
+    return (0,_ethersproject_sha2__WEBPACK_IMPORTED_MODULE_6__.sha256)(pack(types, values));
+}
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+/* 120 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   version: () => (/* binding */ version)
+/* harmony export */ });
+const version = "solidity/5.7.0";
+//# sourceMappingURL=_version.js.map
+
 /***/ })
 /******/ ]);
 /************************************************************************/
@@ -19075,6 +19197,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var ethers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(50);
+/* harmony import */ var ethers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(119);
+/* harmony import */ var ethers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(52);
 
 
 
@@ -19082,8 +19206,8 @@ const main = async (req) => {
 
   function getAccount() {
     return {
-      address: "0xE3416573D4471d3Dbd30510DfdbB470292E1ed4d",
-      privateKey: "b8b79a463ca43f9c00faacc1e8b90843afbe1be2f22fe00d22eb28eaf27a1c77",
+      address: "0x1B8b939710c5b61EA4ab0bD4524Cbe92c06bdA71",
+      privateKey: "1c4179968de4655ebe40e9cf90c2b94c5cb8b14dd6ada4a8e8f3a85228ab515f",
     };
   }
   
@@ -19102,7 +19226,13 @@ const main = async (req) => {
   const executionData = { fleekUrl, unixTimeStamp };
 
   const wallet = new ethers__WEBPACK_IMPORTED_MODULE_1__.Wallet(account.privateKey);
-  const signedData = await wallet.signMessage(JSON.stringify(executionData));
+
+  const messageHash = ethers__WEBPACK_IMPORTED_MODULE_2__.keccak256(['string', 'uint256'], [fleekUrl, unixTimeStamp]);
+
+  // Convert message hash to byte array before signing
+  const messageBytes = ethers__WEBPACK_IMPORTED_MODULE_3__.arrayify(messageHash);
+  
+  const signedData = await wallet.signMessage(messageBytes);
 
   return {
     status: 200,

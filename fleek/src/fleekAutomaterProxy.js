@@ -5,8 +5,8 @@ export const main = async (req) => {
 
   function getAccount() {
     return {
-      address: "0xE3416573D4471d3Dbd30510DfdbB470292E1ed4d",
-      privateKey: "b8b79a463ca43f9c00faacc1e8b90843afbe1be2f22fe00d22eb28eaf27a1c77",
+      address: "0x1B8b939710c5b61EA4ab0bD4524Cbe92c06bdA71",
+      privateKey: "1c4179968de4655ebe40e9cf90c2b94c5cb8b14dd6ada4a8e8f3a85228ab515f",
     };
   }
   
@@ -25,7 +25,13 @@ export const main = async (req) => {
   const executionData = { fleekUrl, unixTimeStamp };
 
   const wallet = new Wallet(account.privateKey);
-  const signedData = await wallet.signMessage(JSON.stringify(executionData));
+
+  const messageHash = ethers.utils.solidityKeccak256(['string', 'uint256'], [fleekUrl, unixTimeStamp]);
+
+  // Convert message hash to byte array before signing
+  const messageBytes = ethers.utils.arrayify(messageHash);
+  
+  const signedData = await wallet.signMessage(messageBytes);
 
   return {
     status: 200,
