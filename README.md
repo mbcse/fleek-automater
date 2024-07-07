@@ -1,5 +1,7 @@
 # Fleek Automator
 
+![Fleek Automater](./FleekAutomater.jpg)
+
 ## Overview
 Fleek Automator is an innovative platform designed to automate Fleek edge functions, allowing them to execute at specified intervals over a set period. This decentralized automation tool leverages a unique architecture to ensure that Fleek functions are called reliably and securely, without the need for centralized management.
 
@@ -46,3 +48,7 @@ Fleek Automator is an innovative platform designed to automate Fleek edge functi
 ## Conclusion
 
 Fleek Automator offers a robust solution for automating Fleek functions in a decentralized manner. By leveraging a network of operators and a sophisticated proof-of-hit mechanism, it ensures reliable and verifiable function execution, paving the way for more advanced and scalable automation capabilities in the decentralized ecosystem.
+
+# video Demo
+
+https://www.loom.com/share/02273bd2cc28424d9a4672233a9ad790?sid=6c18e69b-853f-45b3-994e-96ea6a749cbd
